@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from datetime import datetime
-from home.models import Contact
+from home.models import Contact, Product
 
 
 def index(request):
@@ -14,6 +14,17 @@ def about(request):
 def services(request):
     return render(request, 'services.html')
 
+def store(request):
+    product = Product.objects.all()
+    return render(request, 'store.html', {"product" : product})
+
+
+def cart(request):
+    return render(request, 'cart.html')
+
+
+def checkout(request):
+    return render(request, 'checkout.html')
 
 def contact(request):
     if request.method == "POST":
