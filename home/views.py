@@ -14,24 +14,28 @@ def about(request):
 def services(request):
     return render(request, 'services.html')
 
+
 def store(request):
     product = Product.objects.all()
-    return render(request, 'store.html', {"product" : product})
+    return render(request, 'store.html', {"product": product})
 
 
 def cart(request):
     if request.user.is_authenticated:
         customer = request.user.customer
-        order ,created = Order.objects.get_or_create(customer=customer, complete=False)
+        order, created = Order.objects.get_or_create(
+            customer=customer, complete=False)
         items = order.orderitem_set.all()
     else:
         items = []
-    context={'items':items}
-    return render(request, 'cart.html',context)
+        order = {'get_cart_total': 0, 'get_cart_items': 0}
+    context = {'items': items, 'order': order}
+    return render(request, 'cart.html', context)
 
 
 def checkout(request):
     return render(request, 'checkout.html')
+
 
 def contact(request):
     if request.method == "POST":
@@ -42,7 +46,7 @@ def contact(request):
         contact = Contact(name=name, email=email, phone=phone,
                           desc=desc, date=datetime.today())
         contact.save()
-        
+
     return render(request, 'contact.html')
 
 # Create your views here.
