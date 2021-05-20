@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from datetime import datetime
-from home.models import Contact, Product
+from home.models import *
 
 
 def index(request):
@@ -20,7 +20,14 @@ def store(request):
 
 
 def cart(request):
-    return render(request, 'cart.html')
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order ,created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        items = []
+    context={'items':items}
+    return render(request, 'cart.html',context)
 
 
 def checkout(request):
